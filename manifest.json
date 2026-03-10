@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Toc Chien - Crystal Rose Game",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://crystalrosegame.wildrift.leagueoflegends.com/*",
+    "https://as.api.h5.wildrift.leagueoflegends.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://crystalrosegame.wildrift.leagueoflegends.com/*"
+      ],
+      "js": [
+        "scripts/handlers.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icon.png"
+  }
+}
