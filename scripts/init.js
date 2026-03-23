@@ -90,7 +90,7 @@ async function loadSeeds(tabId) {
       }
     });
   } catch (error) {
-    console.error("Error loading seeds:", error);
+    console.warn("Error loading seeds:", error);
     status.innerText = "⚠️ Please reload the page!";
   }
 }

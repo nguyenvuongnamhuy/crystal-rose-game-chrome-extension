@@ -45,7 +45,7 @@ async function waterAllPlants() {
 
       const data = await response.json();
 
-      if (data.msg === 'success') {
+      if (data.msg === "success") {
         console.log(`✅ Plot ${landIndex} success:`, data);
         successCount++;
       } else {
@@ -88,7 +88,7 @@ async function harvestAllPlants() {
 
       const data = await response.json();
 
-      if (data.msg === 'success') {
+      if (data.msg === "success") {
         console.log(`✅ Harvest plot ${landIndex} success:`, data);
         successCount++;
       } else {
@@ -135,7 +135,7 @@ async function getSeeds() {
       })),
     };
   } catch (error) {
-    console.error("❌ Error getting seeds:", error);
+    console.warn("❌ Error getting seeds:", error);
     return { seeds: [] };
   }
 }
@@ -165,7 +165,7 @@ async function plantAllSeeds(seedId) {
 
       const data = await response.json();
 
-      if (data.msg === 'success') {
+      if (data.msg === "success") {
         console.log(`✅ Plant plot ${landIndex} success:`, data);
         successCount++;
       } else {
