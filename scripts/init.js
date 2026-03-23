@@ -1,4 +1,4 @@
-// File xử lý khởi tạo khi mở popup
+// Initialize when popup opens
 let savedCookie = "";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -6,18 +6,23 @@ window.addEventListener("DOMContentLoaded", async () => {
   const status = document.getElementById("status");
   const targetDomain = "crystalrosegame.wildrift.leagueoflegends.com";
 
+  // Hide main buttons initially
+  document.getElementById("waterBtn").style.display = "none";
+  document.getElementById("harvestBtn").style.display = "none";
+  document.getElementById("seedButtons").style.display = "none";
+
   try {
-    // Lấy tab hiện tại
+    // Get current tab
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true,
     });
 
-    // Kiểm tra có đúng domain không
+    // Check if correct domain
     if (!tab || !tab.url || !tab.url.includes(targetDomain)) {
-      status.innerText = `⚠️ Hãy mở tab ${targetDomain}!`;
+      status.innerText = `⚠️ Please open ${targetDomain} tab!`;
 
-      // Ẩn tất cả các nút và chỉ hiện thông báo
+      // Hide all buttons and show message only
       document.getElementById("waterBtn").style.display = "none";
       document.getElementById("harvestBtn").style.display = "none";
       document.getElementById("seedButtons").style.display = "none";
@@ -26,7 +31,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Inject script vào trang để lấy cookie
+    // Inject script to get cookies from page
     const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => document.cookie,
@@ -35,17 +40,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     savedCookie = results[0]?.result || "";
 
     if (savedCookie) {
-      status.innerText = "✅ Đã lấy cookie thành công!";
+      status.innerText = "✅ Cookies retrieved successfully!";
       console.log("Cookie:", savedCookie);
 
-      // Gọi API lấy danh sách seeds
+      // Call API to get seeds list
       loadSeeds(tab.id);
     } else {
-      status.innerText = "❌ Không tìm thấy cookie!";
+      status.innerText = "❌ Cookies not found!";
     }
   } catch (error) {
-    status.innerText = "❌ Lỗi khi lấy cookie!";
-    console.error("Lỗi:", error);
+    status.innerText = "❌ Error retrieving cookies!";
+    console.error("Error:", error);
   } finally {
     setTimeout(() => {
       overlay.style.display = "none";
@@ -54,24 +59,39 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadSeeds(tabId) {
+  const status = document.getElementById("status");
+
   try {
-    // Gọi API qua content script để lấy danh sách seeds
+    // Call API via content script to get seeds list
     chrome.tabs.sendMessage(tabId, { action: "getSeeds" }, (response) => {
       if (chrome.runtime.lastError || !response) {
         console.error(
-          "Không lấy được seeds:",
+          "Failed to get seeds:",
           chrome.runtime.lastError?.message,
         );
+        status.innerText = "⚠️ Please reload the page!";
         return;
       }
 
       const { seeds } = response;
-      if (seeds && seeds.length > 0) {
-        renderSeedButtons(seeds);
+      if (seeds && seeds.length >= 0) {
+        // Successfully got seeds, show main buttons
+        document.getElementById("waterBtn").style.display = "block";
+        document.getElementById("harvestBtn").style.display = "block";
+        document.getElementById("seedButtons").style.display = "block";
+        status.innerText = "✅ Ready!";
+
+        // Render seed buttons if available
+        if (seeds.length > 0) {
+          renderSeedButtons(seeds);
+        }
+      } else {
+        status.innerText = "⚠️ Please reload the page!";
       }
     });
   } catch (error) {
-    console.error("Lỗi khi load seeds:", error);
+    console.error("Error loading seeds:", error);
+    status.innerText = "⚠️ Please reload the page!";
   }
 }
 
@@ -81,7 +101,7 @@ function renderSeedButtons(seeds) {
   seeds.forEach((seed) => {
     const button = document.createElement("button");
     button.className = "btn-seed";
-    button.textContent = `Trồng ${seed.name}`;
+    button.textContent = `Plant ${seed.name}`;
     button.dataset.seedId = seed.id;
     container.appendChild(button);
   });

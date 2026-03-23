@@ -1,60 +1,60 @@
-// File xử lý các action (button click)
+// Handle actions (button clicks)
 
 document.getElementById("waterBtn").addEventListener("click", async () => {
   const status = document.getElementById("status");
-  status.innerText = "Đang tưới cây...";
+  status.innerText = "Watering plants...";
 
   try {
-    // Lấy tab hiện tại
+    // Get current tab
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true,
     });
 
-    // Gửi message đến handlers để gọi API
+    // Send message to handlers to call API
     chrome.tabs.sendMessage(tab.id, { action: "waterPlants" }, (response) => {
       if (chrome.runtime.lastError) {
-        status.innerText = "❌ Lỗi: Hãy reload trang web!";
+        status.innerText = "❌ Error: Please reload the page!";
         return;
       }
 
       const { total, successCount } = response;
-      status.innerText = `✅ Tưới xong! Thành công: ${successCount}/${total}`;
+      status.innerText = `✅ Watering complete! Success: ${successCount}/${total}`;
     });
   } catch (error) {
-    status.innerText = "Lỗi kết nối!";
-    console.error("Lỗi:", error);
+    status.innerText = "Connection error!";
+    console.error("Error:", error);
   }
 });
 
 document.getElementById("harvestBtn").addEventListener("click", async () => {
   const status = document.getElementById("status");
-  status.innerText = "Đang thu hoạch...";
+  status.innerText = "Harvesting...";
 
   try {
-    // Lấy tab hiện tại
+    // Get current tab
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true,
     });
 
-    // Gửi message đến handlers để gọi API
+    // Send message to handlers to call API
     chrome.tabs.sendMessage(tab.id, { action: "harvestPlants" }, (response) => {
       if (chrome.runtime.lastError) {
-        status.innerText = "❌ Lỗi: Hãy reload trang web!";
+        status.innerText = "❌ Error: Please reload the page!";
         return;
       }
 
       const { total, successCount } = response;
-      status.innerText = `✅ Thu hoạch xong! Thành công: ${successCount}/${total}`;
+      status.innerText = `✅ Harvest complete! Success: ${successCount}/${total}`;
     });
   } catch (error) {
-    status.innerText = "Lỗi kết nối!";
-    console.error("Lỗi:", error);
+    status.innerText = "Connection error!";
+    console.error("Error:", error);
   }
 });
 
-// Event delegation cho các button seed (vì được tạo động)
+// Event delegation for seed buttons (created dynamically)
 document.getElementById("seedButtons").addEventListener("click", async (e) => {
   if (!e.target.classList.contains("btn-seed")) return;
 
@@ -75,16 +75,16 @@ document.getElementById("seedButtons").addEventListener("click", async (e) => {
       { action: "plantSeed", seedId: seedId },
       (response) => {
         if (chrome.runtime.lastError) {
-          status.innerText = "❌ Lỗi: Hãy reload trang web!";
+          status.innerText = "❌ Error: Please reload the page!";
           return;
         }
 
         const { total, successCount } = response;
-        status.innerText = `✅ ${seedName} xong! Thành công: ${successCount}/${total}`;
+        status.innerText = `✅ ${seedName} complete! Success: ${successCount}/${total}`;
       },
     );
   } catch (error) {
-    status.innerText = "Lỗi kết nối!";
-    console.error("Lỗi:", error);
+    status.innerText = "Connection error!";
+    console.error("Error:", error);
   }
 });

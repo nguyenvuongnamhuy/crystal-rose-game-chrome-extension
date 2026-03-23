@@ -1,4 +1,4 @@
-// Content script - chạy trong page context để gọi API
+// Content script - runs in page context to call API
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "waterPlants") {
     waterAllPlants().then(sendResponse);
@@ -46,18 +46,18 @@ async function waterAllPlants() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(`✅ Ô ${landIndex} thành công:`, data);
+        console.log(`✅ Plot ${landIndex} success:`, data);
         successCount++;
       } else {
-        console.log(`❌ Ô ${landIndex} thất bại:`, data);
+        console.log(`❌ Plot ${landIndex} failed:`, data);
       }
 
-      // Delay 200ms giữa các request để tránh bị rate limit
+      // Delay 200ms between requests to avoid rate limit
       if (landIndex < total) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
     } catch (error) {
-      console.log(`❌ Ô ${landIndex} lỗi:`, error);
+      console.log(`❌ Plot ${landIndex} error:`, error);
     }
   }
 
@@ -68,11 +68,11 @@ async function harvestAllPlants() {
   const total = 6;
   let successCount = 0;
 
-  // Gọi tuần tự từng ô một (không gọi song song)
+  // Call sequentially for each plot (not in parallel)
   for (let landIndex = 1; landIndex <= total; landIndex++) {
     try {
       const formData = new FormData();
-      formData.append("landIndexs", String(landIndex)); // Chú ý: landIndexs (có s)
+      formData.append("landIndexs", String(landIndex)); // Note: landIndexs (with s)
 
       const response = await fetch(`${host}/farm?a=harvest`, {
         method: "POST",
@@ -89,18 +89,18 @@ async function harvestAllPlants() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(`✅ Thu hoạch ô ${landIndex} thành công:`, data);
+        console.log(`✅ Harvest plot ${landIndex} success:`, data);
         successCount++;
       } else {
-        console.log(`❌ Thu hoạch ô ${landIndex} thất bại:`, data);
+        console.log(`❌ Harvest plot ${landIndex} failed:`, data);
       }
 
-      // Delay 200ms giữa các request để tránh bị rate limit
+      // Delay 200ms between requests to avoid rate limit
       if (landIndex < total) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
     } catch (error) {
-      console.log(`❌ Thu hoạch ô ${landIndex} lỗi:`, error);
+      console.log(`❌ Harvest plot ${landIndex} error:`, error);
     }
   }
 
@@ -124,7 +124,7 @@ async function getSeeds() {
     const data = await response.json();
     console.log("📦 Seeds data:", data);
 
-    // Parse seeds từ response (cần xem structure của response để điều chỉnh)
+    // Parse seeds from response (adjust based on response structure)
     const { seeds } = data.jData.bag || [];
 
     return {
@@ -135,7 +135,7 @@ async function getSeeds() {
       })),
     };
   } catch (error) {
-    console.error("❌ Lỗi lấy seeds:", error);
+    console.error("❌ Error getting seeds:", error);
     return { seeds: [] };
   }
 }
@@ -144,7 +144,7 @@ async function plantAllSeeds(seedId) {
   const total = 6;
   let successCount = 0;
 
-  // Trồng tuần tự từng ô một
+  // Plant sequentially for each plot
   for (let landIndex = 1; landIndex <= total; landIndex++) {
     try {
       const formData = new FormData();
@@ -166,10 +166,10 @@ async function plantAllSeeds(seedId) {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(`✅ Trồng ô ${landIndex} thành công:`, data);
+        console.log(`✅ Plant plot ${landIndex} success:`, data);
         successCount++;
       } else {
-        console.log(`❌ Trồng ô ${landIndex} thất bại:`, data);
+        console.log(`❌ Plant plot ${landIndex} failed:`, data);
       }
 
       // Delay 200ms
@@ -177,7 +177,7 @@ async function plantAllSeeds(seedId) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
     } catch (error) {
-      console.log(`❌ Trồng ô ${landIndex} lỗi:`, error);
+      console.log(`❌ Plant plot ${landIndex} error:`, error);
     }
   }
 
