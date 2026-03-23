@@ -45,7 +45,7 @@ async function waterAllPlants() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.msg === 'success') {
         console.log(`✅ Plot ${landIndex} success:`, data);
         successCount++;
       } else {
@@ -88,7 +88,7 @@ async function harvestAllPlants() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.msg === 'success') {
         console.log(`✅ Harvest plot ${landIndex} success:`, data);
         successCount++;
       } else {
@@ -165,7 +165,7 @@ async function plantAllSeeds(seedId) {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.msg === 'success') {
         console.log(`✅ Plant plot ${landIndex} success:`, data);
         successCount++;
       } else {
