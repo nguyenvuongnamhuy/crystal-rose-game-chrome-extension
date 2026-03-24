@@ -1,5 +1,19 @@
 // Handle actions (button clicks)
 
+document.getElementById("reloadBtn").addEventListener("click", async () => {
+  try {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+
+    chrome.tabs.reload(tab.id);
+    window.close(); // Close popup after reload
+  } catch (error) {
+    console.error("Error reloading:", error);
+  }
+});
+
 document.getElementById("waterBtn").addEventListener("click", async () => {
   const status = document.getElementById("status");
   status.innerText = "Watering plants...";
