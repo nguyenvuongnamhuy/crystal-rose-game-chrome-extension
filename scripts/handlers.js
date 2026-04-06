@@ -104,6 +104,11 @@ async function harvestAllPlants() {
     }
   }
 
+  // Fire-and-forget: wait 1s then submit mission in background
+  new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
+    submitMission("7000003"),
+  );
+
   return { total, successCount };
 }
 
@@ -181,5 +186,40 @@ async function plantAllSeeds(seedId) {
     }
   }
 
+  // Fire-and-forget: wait 1s then submit mission in background
+  new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
+    submitMission("7000004"),
+  );
+
   return { total, successCount };
+}
+
+async function submitMission(missionId) {
+  try {
+    const formData = new FormData();
+    formData.append("missionType", "1");
+    formData.append("missionId", String(missionId));
+
+    const response = await fetch(`${host}/mission?a=missionSubmit`, {
+      method: "POST",
+      headers: {
+        accept: "application/json, text/plain, */*",
+        "accept-language": "en-GB,en;q=0.9,vi-VN;q=0.8,vi;q=0.7,en-US;q=0.6",
+        origin: "https://crystalrosegame.wildrift.leagueoflegends.com",
+        referer: "https://crystalrosegame.wildrift.leagueoflegends.com/",
+      },
+      body: formData,
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    if (data.msg === "success") {
+      console.log("✅ Mission submit success:", data);
+    } else {
+      console.log("❌ Mission submit failed:", data);
+    }
+    return data;
+  } catch (error) {
+    console.log("❌ Mission submit error:", error);
+  }
 }
