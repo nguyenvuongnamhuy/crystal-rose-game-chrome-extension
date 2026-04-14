@@ -74,9 +74,11 @@ document.getElementById("seedButtons").addEventListener("click", async (e) => {
 
   const status = document.getElementById("status");
   const seedId = e.target.dataset.seedId;
-  const seedName = e.target.textContent;
+  const seedName = e.target.textContent
+    .replace(/^Plant\s+/, "")
+    .replace(/\s*\(\d+\)$/, "");
 
-  status.innerText = `${seedName}...`;
+  status.innerText = `Planting ${seedName}...`;
 
   try {
     const [tab] = await chrome.tabs.query({

@@ -67,10 +67,6 @@ async function loadSeeds(tabId) {
     // Call API via content script to get seeds list
     chrome.tabs.sendMessage(tabId, { action: "getSeeds" }, (response) => {
       if (chrome.runtime.lastError || !response) {
-        console.error(
-          "Failed to get seeds:",
-          chrome.runtime.lastError?.message,
-        );
         status.innerText = "⚠️ Please reload the page!";
         return;
       }
