@@ -104,7 +104,7 @@ function renderSeedButtons(seeds) {
   seeds.forEach((seed) => {
     const button = document.createElement("button");
     button.className = "btn-seed";
-    button.textContent = `Plant ${seed.name}`;
+    button.textContent = `Plant ${seed.name} (${seed.quantity})`;
     button.dataset.seedId = seed.id;
     container.appendChild(button);
   });
