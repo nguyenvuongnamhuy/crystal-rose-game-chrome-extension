@@ -104,10 +104,8 @@ async function harvestAllPlants() {
     }
   }
 
-  // Fire-and-forget: wait 1s then submit mission in background
-  new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-    submitMission("7000003"),
-  );
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await submitMission("7000003");
 
   return { total, successCount };
 }
@@ -186,10 +184,8 @@ async function plantAllSeeds(seedId) {
     }
   }
 
-  // Fire-and-forget: wait 1s then submit mission in background
-  new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-    submitMission("7000004"),
-  );
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await submitMission("7000004");
 
   return { total, successCount };
 }
