@@ -4,6 +4,12 @@ Chrome extension that automates the flower-growing mini-game in the **Crystal Ro
 
 ---
 
+## Guide
+
+- After modifying any code, review this instruction file and update it if the change affects documented behavior, conventions, endpoints, or data models.
+
+---
+
 ## File Structure
 
 ```
@@ -46,8 +52,8 @@ scripts/
 
 ### Mission IDs (fire-and-forget after 1s)
 
-- After harvest → submit mission `7000003`
-- After plant → submit mission `7000004`
+- After harvest → submit mission `7000003` (only if `successCount > 0`)
+- After plant → submit mission `7000004` (only if `successCount > 0`)
 
 ---
 
