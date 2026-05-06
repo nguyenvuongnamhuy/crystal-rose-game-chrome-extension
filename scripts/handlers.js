@@ -104,10 +104,7 @@ async function harvestAllPlants() {
     }
   }
 
-  if (successCount > 0) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await submitMission("7000003");
-  }
+  setTimeout(() => submitMission("7000004"), 1000);
 
   return { total, successCount };
 }
@@ -186,10 +183,7 @@ async function plantAllSeeds(seedId) {
     }
   }
 
-  if (successCount > 0) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await submitMission("7000004");
-  }
+  setTimeout(() => submitMission("7000003"), 1000);
 
   return { total, successCount };
 }

@@ -52,8 +52,8 @@ scripts/
 
 ### Mission IDs (fire-and-forget after 1s)
 
-- After harvest → submit mission `7000003` (only if `successCount > 0`)
-- After plant → submit mission `7000004` (only if `successCount > 0`)
+- After plant → submit mission `7000003`
+- After harvest → submit mission `7000004`
 
 ---
 
