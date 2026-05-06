@@ -1,6 +1,4 @@
 // Initialize when popup opens
-let savedCookie = "";
-
 window.addEventListener("DOMContentLoaded", async () => {
   const overlay = document.getElementById("loading-overlay");
   const status = document.getElementById("status");
@@ -21,37 +19,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // Check if correct domain
     if (!tab || !tab.url || !tab.url.includes(targetDomain)) {
-      status.innerText = `⚠️ Please open ${targetDomain} tab!`;
-
-      // Hide all buttons and show message only
-      document.getElementById("reloadBtn").style.display = "none";
-      document.getElementById("waterBtn").style.display = "none";
-      document.getElementById("harvestBtn").style.display = "none";
-      document.getElementById("seedButtons").style.display = "none";
-
+      status.innerText = `⚠️ Wrong tab! Please open the Crystal Rose game page.`;
       overlay.style.display = "none";
       return;
     }
 
-    // Inject script to get cookies from page
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => document.cookie,
-    });
-
-    savedCookie = results[0]?.result || "";
-
-    if (savedCookie) {
-      status.innerText = "✅ Cookies retrieved successfully!";
-      console.log("Cookie:", savedCookie);
-
-      // Call API to get seeds list
-      loadSeeds(tab.id);
-    } else {
-      status.innerText = "❌ Cookies not found!";
-    }
+    // Call API to get seeds list
+    loadSeeds(tab.id);
   } catch (error) {
-    status.innerText = "❌ Error retrieving cookies!";
+    status.innerText = "❌ Error initializing!";
     console.error("Error:", error);
   } finally {
     setTimeout(() => {
@@ -95,13 +71,13 @@ async function loadSeeds(tabId) {
 }
 
 function renderSeedButtons(seeds) {
-  const container = document.getElementById("seedButtons");
+  const grid = document.querySelector("#seedButtons .seed-grid");
 
   seeds.forEach((seed) => {
     const button = document.createElement("button");
     button.className = "btn-seed";
-    button.textContent = `Plant ${seed.name} (${seed.quantity})`;
+    button.textContent = `${seed.name} (${seed.quantity})`;
     button.dataset.seedId = seed.id;
-    container.appendChild(button);
+    grid.appendChild(button);
   });
 }

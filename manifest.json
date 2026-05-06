@@ -3,8 +3,7 @@
   "name": "Toc Chien - Crystal Rose Game",
   "version": "1.0",
   "permissions": [
-    "tabs",
-    "scripting"
+    "tabs"
   ],
   "host_permissions": [
     "https://crystalrosegame.wildrift.leagueoflegends.com/*",

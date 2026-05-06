@@ -16,6 +16,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     plantAllSeeds(request.seedId).then(sendResponse);
     return true; // Keep channel open for async response
   }
+  if (request.action === "claimReward") {
+    claimReward(request.rewardId).then(sendResponse);
+    return true;
+  }
 });
 
 const host =
@@ -104,8 +108,6 @@ async function harvestAllPlants() {
     }
   }
 
-  setTimeout(() => submitMission("7000004"), 1000);
-
   return { total, successCount };
 }
 
@@ -183,16 +185,14 @@ async function plantAllSeeds(seedId) {
     }
   }
 
-  setTimeout(() => submitMission("7000003"), 1000);
-
   return { total, successCount };
 }
 
-async function submitMission(missionId) {
+async function claimReward(rewardId) {
   try {
     const formData = new FormData();
     formData.append("missionType", "1");
-    formData.append("missionId", String(missionId));
+    formData.append("missionId", String(rewardId));
 
     const response = await fetch(`${host}/mission?a=missionSubmit`, {
       method: "POST",
@@ -208,12 +208,12 @@ async function submitMission(missionId) {
 
     const data = await response.json();
     if (data.msg === "success") {
-      console.log("✅ Mission submit success:", data);
+      console.log("✅ Claim reward success:", data);
     } else {
-      console.log("❌ Mission submit failed:", data);
+      console.log("❌ Claim reward failed:", data);
     }
     return data;
   } catch (error) {
-    console.log("❌ Mission submit error:", error);
+    console.log("❌ Claim reward error:", error);
   }
 }

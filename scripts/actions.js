@@ -60,7 +60,26 @@ document.getElementById("harvestBtn").addEventListener("click", async () => {
       }
 
       const { total, successCount } = response;
-      status.innerText = `✅ Harvest complete! Success: ${successCount}/${total}`;
+      status.innerText = `✅ Harvest complete! Success: ${successCount}/${total}
+Claiming reward...`;
+
+      setTimeout(() => {
+        chrome.tabs.sendMessage(
+          tab.id,
+          { action: "claimReward", rewardId: "7000004" },
+          (rewardRes) => {
+            if (
+              chrome.runtime.lastError ||
+              !rewardRes ||
+              rewardRes.msg !== "success"
+            ) {
+              status.innerText = `✅ Harvest complete! Success: ${successCount}/${total}\n⚠️ Claim reward failed`;
+              return;
+            }
+            status.innerText = `✅ Harvest complete! Success: ${successCount}/${total}\nReward claimed!`;
+          },
+        );
+      }, 1000);
     });
   } catch (error) {
     status.innerText = "Connection error!";
@@ -96,7 +115,28 @@ document.getElementById("seedButtons").addEventListener("click", async (e) => {
         }
 
         const { total, successCount } = response;
-        status.innerText = `✅ ${seedName} complete! Success: ${successCount}/${total}`;
+        status.innerText = `✅ ${seedName} planted! Success: ${successCount}/${total}
+Claiming reward...`;
+
+        setTimeout(() => {
+          chrome.tabs.sendMessage(
+            tab.id,
+            { action: "claimReward", rewardId: "7000003" },
+            (rewardRes) => {
+              if (
+                chrome.runtime.lastError ||
+                !rewardRes ||
+                rewardRes.msg !== "success"
+              ) {
+                status.innerText = `✅ ${seedName} planted! Success: ${successCount}/${total}
+⚠️ Claim reward failed`;
+                return;
+              }
+              status.innerText = `✅ ${seedName} planted! Success: ${successCount}/${total}
+Reward claimed!`;
+            },
+          );
+        }, 1000);
       },
     );
   } catch (error) {
