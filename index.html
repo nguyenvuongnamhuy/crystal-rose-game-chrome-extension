@@ -103,6 +103,22 @@
       background: #d68910;
     }
 
+    .btn-auto {
+      flex: 1;
+      padding: 10px 6px;
+      background: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .btn-auto:hover {
+      background: #2471a3;
+    }
+
     .btn-reload {
       flex: 0 0 auto;
       padding: 10px 12px;
@@ -167,7 +183,8 @@
   <div id="status">Loading ...</div>
 
   <div class="action-row">
-    <button id="waterBtn" class="btn-water">💧 Water Plants</button>
+    <button id="autoBtn" class="btn-auto">⚡ Auto</button>
+    <button id="waterBtn" class="btn-water">💧 Water</button>
     <button id="harvestBtn" class="btn-harvest">🌾 Harvest</button>
     <button id="reloadBtn" class="btn-reload">🔄</button>
   </div>

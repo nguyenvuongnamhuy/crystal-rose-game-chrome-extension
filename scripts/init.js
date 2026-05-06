@@ -5,6 +5,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const targetDomain = "crystalrosegame.wildrift.leagueoflegends.com";
 
   // Hide main buttons initially
+  document.getElementById("autoBtn").style.display = "none";
   document.getElementById("reloadBtn").style.display = "none";
   document.getElementById("waterBtn").style.display = "none";
   document.getElementById("harvestBtn").style.display = "none";
@@ -50,6 +51,7 @@ async function loadSeeds(tabId) {
       const { seeds } = response;
       if (seeds && seeds.length >= 0) {
         // Successfully got seeds, show main buttons
+        document.getElementById("autoBtn").style.display = "block";
         document.getElementById("reloadBtn").style.display = "block";
         document.getElementById("waterBtn").style.display = "block";
         document.getElementById("harvestBtn").style.display = "block";

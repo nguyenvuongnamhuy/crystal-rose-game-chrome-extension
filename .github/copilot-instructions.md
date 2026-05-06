@@ -29,7 +29,8 @@ scripts/
 2. Sends message `getSeeds` → `handlers.js` calls API → returns seed list.
 3. `init.js` renders dynamic seed buttons into `#seedButtons .seed-grid`.
 4. User clicks button → `actions.js` sends message → `handlers.js` calls the corresponding API.
-5. After harvest or plant: `actions.js` waits 1s then sends `claimReward` message → `handlers.js` calls claim reward API.
+5. **Harvest & Plant:** popup sends `harvestAndClaim` / `plantAndClaim` → `handlers.js` runs the full sequence (API + 1s delay + claimReward) and returns result. Safe to close popup mid-flight.
+6. **Auto button:** popup sends `autoRun` with last seed id → `handlers.js` runs Water → Harvest → claimReward → Plant → claimReward sequentially. Safe to close popup mid-flight.
 
 ---
 
@@ -77,13 +78,14 @@ scripts/
 | ----------------- | --------------------- | -------------------------------------------------- |
 | `loading-overlay` | div                   | Full-screen spinner shown on load                  |
 | `status`          | div                   | Displays status messages (fixed 2-line height)     |
+| `autoBtn`         | button `.btn-auto`    | Auto run Water→Harvest→Plant (blue), first in row  |
 | `waterBtn`        | button `.btn-water`   | Water plants (green), in action row                |
 | `harvestBtn`      | button `.btn-harvest` | Harvest (orange), in action row                    |
 | `reloadBtn`       | button `.btn-reload`  | Reload tab (🔄 icon), in action row                |
 | `seedButtons`     | div                   | Container with `h3` title + `.seed-grid` inner div |
 
 - Layout order (top → bottom): `#status` → `.action-row` → `#seedButtons`
-- `.action-row`: flex row with Water | Harvest | Reload buttons side by side.
+- `.action-row`: flex row with Auto | Water | Harvest | Reload buttons side by side.
 - Seed buttons are dynamically created in `renderSeedButtons()` with class `btn-seed`, injected into `#seedButtons .seed-grid`.
 - `.seed-grid`: CSS grid, 3 columns, max 12 seeds.
 - Button text format: `{seed.name} ({seed.quantity})`
@@ -108,5 +110,7 @@ scripts/
 - `handlers.js` listens on `chrome.runtime.onMessage` and returns `true` to keep the channel open for async responses.
 - API functions loop over **6 plots** (landIndex 1→6), sequentially, with 200ms delay.
 - Success is determined by `data.msg === "success"`.
-- `claimReward` is triggered from `actions.js` (not fire-and-forget in `handlers.js`) so status updates are visible in popup.
+- `claimReward` is called inside `handlers.js` (not from `actions.js`) so it continues running even if the popup is closed.
+- Harvest and plant actions use composite handlers: `harvestAndClaim` and `plantAndClaim`.
+- Auto sequence uses `autoRun(seedId)` which runs Water → Harvest+claim → Plant+claim entirely in the content script.
 - No background service worker is used.

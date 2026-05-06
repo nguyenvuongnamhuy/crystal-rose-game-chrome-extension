@@ -20,7 +20,57 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     claimReward(request.rewardId).then(sendResponse);
     return true;
   }
+  if (request.action === "autoRun") {
+    autoRun(request.seedId).then(sendResponse);
+    return true;
+  }
+  if (request.action === "harvestAndClaim") {
+    harvestAndClaim().then(sendResponse);
+    return true;
+  }
+  if (request.action === "plantAndClaim") {
+    plantAndClaim(request.seedId).then(sendResponse);
+    return true;
+  }
 });
+
+async function harvestAndClaim() {
+  const res = await harvestAllPlants();
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const reward = await claimReward("7000004");
+  return { ...res, reward };
+}
+
+async function plantAndClaim(seedId) {
+  const res = await plantAllSeeds(seedId);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const reward = await claimReward("7000003");
+  return { ...res, reward };
+}
+
+async function autoRun(seedId) {
+  // Step 1: Water
+  const waterRes = await waterAllPlants();
+  console.log("⚡ Auto - Water:", waterRes);
+
+  // Step 2: Harvest
+  const harvestRes = await harvestAllPlants();
+  console.log("⚡ Auto - Harvest:", harvestRes);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const harvestReward = await claimReward("7000004");
+  console.log("⚡ Auto - Harvest reward:", harvestReward);
+
+  // Step 3: Plant
+  if (seedId) {
+    const plantRes = await plantAllSeeds(seedId);
+    console.log("⚡ Auto - Plant:", plantRes);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const plantReward = await claimReward("7000003");
+    console.log("⚡ Auto - Plant reward:", plantReward);
+  }
+
+  return { done: true };
+}
 
 const host =
   "https://as.api.h5.wildrift.leagueoflegends.com/5c/crystalrose/pub";
